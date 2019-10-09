@@ -19,9 +19,8 @@ trait MasterUserComponent extends DB {
       masterTableRef.result
     }
 
-//    def registerUser(user : MasterUser) = db.run{
-//      masterTableRef.insertStatement(user)
-//
-//    }
+    def registerUser(user : MasterUser) = db.run{
+      masterTableRef += user
+    }
   }
 }

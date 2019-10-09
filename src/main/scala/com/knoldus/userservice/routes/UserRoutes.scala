@@ -1,5 +1,6 @@
 package com.knoldus.userservice.routes
 
+import akka.event.jul.Logger
 import akka.http.scaladsl.model.Uri.Path
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
@@ -13,19 +14,20 @@ class UserRoutes(repo:MasterUserComponent#MasterUserRepository)(implicit ex: Exe
 
   val routes : Route  = path("getAll") {
     get {
+      println("Route hit")
       complete(repo.all)
     }
   }
 
-  val registerRoute : Route = path("registerUser") {
-    post {
-      entity(as[MasterUser]) { user =>
-        val stored = repo.registerUser(user)
-        onComplete(stored) {
-          done => complete("User registered")
-        }
-      }
-      complete(repo.registerUser)
-    }
-  }
+//  val routes1 : Route = path("registerUser") {
+//    post {
+//      println("Route hit")
+//      entity(as[MasterUser]) { user =>
+//        val stored = repo.registerUser(user)
+//        onComplete(stored) {
+//          done => complete("User registered")
+//        }
+//      }
+//    }
+//  }
 }
