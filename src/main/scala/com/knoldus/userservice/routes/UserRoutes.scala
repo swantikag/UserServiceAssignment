@@ -12,22 +12,23 @@ import scala.concurrent.ExecutionContext
 class UserRoutes(repo:MasterUserComponent#MasterUserRepository)(implicit ex: ExecutionContext)
   extends JsonSupport {
 
-  val routes : Route  = path("getAll") {
+  val routes: Route = concat(
     get {
-      println("Route hit")
-      complete(repo.all)
+      path("getAll") {
+        println("Get Route hit")
+        complete(repo.all)
+      }
+    },
+    post {
+      path("registerUser") {
+        println("Route hit")
+        entity(as[MasterUser]) { user =>
+          val stored = repo.registerUser(user)
+          onComplete(stored) {
+            done => complete("User registered")
+          }
+        }
+      }
     }
-  }
-
-//  val routes1 : Route = path("registerUser") {
-//    post {
-//      println("Route hit")
-//      entity(as[MasterUser]) { user =>
-//        val stored = repo.registerUser(user)
-//        onComplete(stored) {
-//          done => complete("User registered")
-//        }
-//      }
-//    }
-//  }
+  )
 }

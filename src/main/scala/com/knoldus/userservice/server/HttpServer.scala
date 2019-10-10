@@ -15,7 +15,6 @@ trait HttpServer extends UserServiceConfig {
   implicit def materializer : Materializer
   implicit def ec : ExecutionContext
   def routes : Route
-//  def routes1 : Route
   Http().bindAndHandle(routes, httpHost, httpPort)
 //  println(s"Server online t http://localhost:8080/\nPress RETURN to stop...")
 //  StdIn.readLine()
