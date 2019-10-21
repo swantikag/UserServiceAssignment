@@ -1,11 +1,13 @@
 package com.knoldus.userservice.data.persistence
 
-import slick.jdbc.JdbcProfile
-
 trait DB {
-  val driver : JdbcProfile = slick.jdbc.MySQLProfile
-  import driver.api._
-  lazy val db = Database.forConfig("mysql")
+  val driver:slick.jdbc.JdbcProfile
+  //= slick.jdbc.MySQLProfile
+  val db: driver.backend.DatabaseDef
+  //= Database.forConfig("mysql")
+  def close: Unit = {
+    db.close()
+  }
 }
 
 

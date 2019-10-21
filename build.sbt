@@ -2,7 +2,7 @@ name := "UserManagementSystem"
 
 version := "0.1"
 
-scalaVersion := "2.13.1"
+scalaVersion := "2.12.8"
 
 mainClass in Compile := Some("UserService")
 
@@ -21,7 +21,8 @@ libraryDependencies ++= {
     "com.h2database" % "h2" % "1.4.192",
     "com.typesafe.akka" %% "akka-http-testkit" % "10.1.10",
     "com.typesafe.akka" %% "akka-stream-testkit" % "2.5.23",
-    "com.typesafe.akka" %% "akka-testkit" % "2.5.21" % Test
+    "com.pauldijou" %% "jwt-core" % "4.1.0",
+    "org.mockito" % "mockito-all" % "1.9.5" % Test
   )
 }
 
