@@ -96,7 +96,7 @@ class UserRoutesSpec extends WordSpec with Matchers with ScalatestRouteTest with
         entity = HttpEntity(MediaTypes.`application/json`, loginRequest))
       postRequest ~> routesTest ~> check {
         status.isSuccess() shouldEqual true
-        responseAs[String] shouldEqual ("Welcome,test123\nToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.dGVzdDEyMw.8m4JajSfRN6sMFlKSzzCJNQKQmEdZAyd-SAJxzIoMuc")
+        responseAs[String] shouldEqual ("Welcome,test123")
       }
     }
   }

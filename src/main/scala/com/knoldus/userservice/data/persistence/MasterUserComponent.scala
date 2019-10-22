@@ -1,5 +1,5 @@
 package com.knoldus.userservice.data.persistence
-import com.knoldus.userservice.data.model.{LoginRequest, LoginUser, MasterUser, UserDetails}
+import com.knoldus.userservice.data.model.{LoginRequest, LoginUser, MasterUser, UserDetails, UserToken}
 import slick.jdbc.MySQLProfile.api._
 
 import scala.concurrent.Future
@@ -35,6 +35,8 @@ trait MasterUserComponent {
 
   class MasterUserRepository(implicit ec:ExecutionContext) extends LoginUserComponent {
     this: DB =>
+
+//    val UserTokensMap: mutable.Map[String, String] = scala.collection.mutable.Map(""->"")
 
     /**
      * Validates the entered email ID to accept only allowed email Id format
@@ -107,6 +109,10 @@ trait MasterUserComponent {
           .map(_.mobNumber).flatMap(mob => masterTableRef.filter(x => x.mobNumber === mob).map(_.isVerified))
         db.run(isVerified.result)
       }
+
+//      def storeToken(user:UserToken): Unit={
+//        UserTokensMap(user.uname) = user.token
+//      }
     }
   }
 

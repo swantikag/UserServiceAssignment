@@ -1,31 +1,39 @@
 package com.knoldus.userservice.routes
 
 
+import java.security.KeyPair
+
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
-import com.knoldus.userservice.data.model.{JsonSupport, LoginRequest, LoginUser, MasterUser, UserDetails}
+import com.knoldus.userservice.data.model.{JsonSupport, LoginRequest, LoginUser, MasterUser, UserDetails, UserToken}
 import com.knoldus.userservice.data.persistence.{LoginUserComponent, MasterUserComponent}
-import pdi.jwt.JwtAlgorithm.HS256
-import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim, JwtHeader}
-import java.time.Clock
+import java.util.{Calendar, Date}
 
-import akka.http.javadsl.model.headers.RawHeader
-import akka.http.scaladsl.model.{StatusCodes, headers}
-import akka.http.scaladsl.model.headers.RawHeader
+import io.jsonwebtoken.{Jwt, Jwts, SignatureAlgorithm}
+import javax.crypto.SecretKey
+import io.jsonwebtoken
 
 import scala.util.Success
 
 class UserRoutes(masterUserRepo:MasterUserComponent#MasterUserRepository) extends JsonSupport {
 
-  implicit val clock: Clock = Clock.systemUTC
-
+  lazy val ONE_MINUTE_IN_MILLIS = 60000
   private def login = post {
     entity(as[LoginRequest]) { user =>
       onComplete(masterUserRepo.authenticateUser(user)) {
         case util.Success(res) if res.length == 1 => onComplete(masterUserRepo.isEmailVerified(user)) {
           case util.Success(res) if res.head => {
-            val claims = Jwt.encode(user.uname,"secretKey", JwtAlgorithm.HS256)
-            complete("Welcome," + user.uname + "\nToken: " + claims)
+            val date = Calendar.getInstance()
+            val time = date.getTimeInMillis()
+            val expiration = new Date(time + (10 * ONE_MINUTE_IN_MILLIS))
+            val token = Jwts.builder()
+                .setSubject(user.uname)
+                .signWith(SignatureAlgorithm.HS256, "Secret_Key")
+                .setIssuedAt(new Date())
+                .setExpiration(expiration)
+                .compact()
+//            masterUserRepo.storeToken(UserToken(user.uname, token))
+            complete("Welcome," + user.uname)
           }
           case util.Success(res) => complete("Email ID for the user is not verified")
           case util.Failure(ex) => complete(ex.getMessage)
@@ -65,6 +73,10 @@ class UserRoutes(masterUserRepo:MasterUserComponent#MasterUserRepository) extend
     complete(masterUserRepo.all)
   }
 
+//  private def updatePassword = post{
+//
+//  }
+
   val routes: Route = path("getUsers"){
     getAllUsers
   } ~
@@ -77,4 +89,7 @@ class UserRoutes(masterUserRepo:MasterUserComponent#MasterUserRepository) extend
   path("verifyEmail"){
     verifyEmail
   }
+//  path("passwordChange"){
+//    updatePassword
+//  }
 }

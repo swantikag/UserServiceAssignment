@@ -21,7 +21,7 @@ libraryDependencies ++= {
     "com.h2database" % "h2" % "1.4.192",
     "com.typesafe.akka" %% "akka-http-testkit" % "10.1.10",
     "com.typesafe.akka" %% "akka-stream-testkit" % "2.5.23",
-    "com.pauldijou" %% "jwt-core" % "4.1.0",
+    "io.jsonwebtoken" % "jjwt" % "0.9.1",
     "org.mockito" % "mockito-all" % "1.9.5" % Test
   )
 }
