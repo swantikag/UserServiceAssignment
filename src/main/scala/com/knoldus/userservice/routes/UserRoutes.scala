@@ -5,13 +5,12 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
 import com.knoldus.userservice.data.model.{JsonSupport, LoginRequest, LoginUser, MasterUser, UserDetails}
 import com.knoldus.userservice.data.persistence.{LoginUserComponent, MasterUserComponent}
-import pdi.jwt.JwtAlgorithm.HS256
-import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim, JwtHeader}
 import java.time.Clock
 
 import akka.http.javadsl.model.headers.RawHeader
 import akka.http.scaladsl.model.{StatusCodes, headers}
 import akka.http.scaladsl.model.headers.RawHeader
+import pdi.jwt.{Jwt, JwtAlgorithm}
 
 import scala.util.Success
 
