@@ -4,7 +4,7 @@ version := "0.1"
 
 scalaVersion := "2.12.8"
 
-mainClass in (Compile, run) := Some("UserService")
+mainClass in (Compile, run) := Some("com.knoldus.userservice.UserService")
 
 libraryDependencies ++= {
   val slickVersion           = "3.3.2"
@@ -26,4 +26,4 @@ libraryDependencies ++= {
   )
 }
 
-coverageEnabled := true
+//coverageEnabled := true
