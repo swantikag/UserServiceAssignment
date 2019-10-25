@@ -1,0 +1,21 @@
+version: '2'
+services:
+ mysql:
+  image: mysql:8.0
+  environment:
+    - MYSQL_ROOT_PASSWORD=Root@123
+    - MYSQL_DATABASE=mysql
+  networks:
+    - userservice-sql
+ restapi:
+  image: userservice-jdbc
+  container_name: restapi
+  ports:
+    - 9000:8082
+  depends_on:
+    - mysql
+  networks:
+    - userservice-sql
+networks:
+  userservice-sql:
+
