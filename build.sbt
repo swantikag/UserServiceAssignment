@@ -26,4 +26,4 @@ libraryDependencies ++= {
   )
 }
 
-//coverageEnabled := true
+coverageEnabled := true
