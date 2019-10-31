@@ -1,6 +1,7 @@
 package com.knoldus.userservice.model
 
 import slick.jdbc.MySQLProfile.api._
+import slick.lifted.{ForeignKeyQuery, ProvenShape}
 
 trait LoginUserComponent extends MasterUserComponent {
 
@@ -15,9 +16,9 @@ trait LoginUserComponent extends MasterUserComponent {
 
     def password: Rep[String] = column[String]("password")
 
-    def * = (mobNumber, uname, password).<>(LoginUser.tupled, LoginUser.unapply)
+    def * : ProvenShape[LoginUser] = (mobNumber, uname, password).<>(LoginUser.tupled, LoginUser.unapply)
 
-    def fk_mobNumber = foreignKey("fk_MobNumber", mobNumber, masterTableRef)(_.mobNumber)
+    def fk_mobNumber : ForeignKeyQuery[MasterUserTable, MasterUser] = foreignKey("fk_MobNumber", mobNumber, masterTableRef)(_.mobNumber)
   }
 
   lazy val loginTableRef = TableQuery[LoginUserTable]

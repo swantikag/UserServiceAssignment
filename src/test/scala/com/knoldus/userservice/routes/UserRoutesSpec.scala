@@ -81,7 +81,7 @@ class UserRoutesSpec extends WordSpec with Matchers with ScalatestRouteTest with
     }
 
   "The service" should {
-    "allow an registered email ID to be verified" in {
+    "allow a registered email ID to be verified" in {
       when(mockRepo.verifyEmail("testing@gmail.com")).thenReturn(Future[Int](1))
       Get("/verifyEmail?email=testing@gmail.com") ~> TestObject.userRoutes ~> check {
         status.isSuccess() shouldEqual true

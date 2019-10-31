@@ -1,6 +1,7 @@
 package com.knoldus.userservice.model
 
 import slick.jdbc.MySQLProfile.api._
+import slick.lifted.ProvenShape
 
 trait MasterUserComponent {
 
@@ -17,9 +18,9 @@ trait MasterUserComponent {
 
     def age: Rep[Int] = column[Int]("age")
 
-    def isVerified = column[Boolean]("isVerified")
+    def isVerified: Rep[Boolean] = column[Boolean]("isVerified")
 
-    def * = (mobNumber, email, name, age, isVerified).<>(MasterUser.tupled, MasterUser.unapply)
+    def * : ProvenShape[MasterUser] = (mobNumber, email, name, age, isVerified).<>(MasterUser.tupled, MasterUser.unapply)
   }
 
   lazy val masterTableRef = TableQuery[MasterUserTable]
