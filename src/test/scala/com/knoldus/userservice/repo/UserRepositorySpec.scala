@@ -1,6 +1,6 @@
 import com.knoldus.userservice.Dao.UserDaoImpl
 import com.knoldus.userservice.config.DB
-import com.knoldus.userservice.model.{LoginRequest, LoginUser, UserDetails}
+import com.knoldus.userservice.model.{LoginRequest, LoginUser, MasterUser, UserDetails}
 import com.knoldus.userservice.repo.TestDBImpl
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.ScalaFutures
@@ -15,6 +15,12 @@ class UserRepositorySpec extends FunSuite with ScalaFutures {
   implicit val defaultPatience = PatienceConfig(Span(5,Seconds), Span(500, Millis))
 
   val userDoa = new UserDaoImpl with TestDBImpl
+
+  test("View all registered users") {
+    whenReady(userDoa.all){result =>
+      assert(result === Vector(MasterUser("8530716761","johndoe@gmail.com","John Doe",32,false), MasterUser("9622142113","james@gmail.com","James",50,true)))
+    }
+  }
 
   test("Register a new user") {
     val testUser = UserDetails("8564123758", "TestData", "test@gmail.com", 42, "test", "test@123")
