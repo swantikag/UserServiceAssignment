@@ -4,7 +4,7 @@ version := "0.1"
 
 scalaVersion := "2.12.8"
 
-mainClass in (Compile, run) := Some("com.knoldus.userservice.UserService")
+mainClass in (Compile, run) := Some("com.knoldus.userservice.server.HttpServer")
 
 libraryDependencies ++= {
   val slickVersion           = "3.3.2"

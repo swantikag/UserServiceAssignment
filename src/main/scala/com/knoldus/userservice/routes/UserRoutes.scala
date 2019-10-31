@@ -3,25 +3,22 @@ package com.knoldus.userservice.routes
 
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
-import com.knoldus.userservice.data.model.{JsonSupport, LoginRequest, LoginUser, MasterUser, UserDetails}
-import com.knoldus.userservice.data.persistence.{LoginUserComponent, MasterUserComponent}
 import java.time.Clock
 
-import akka.http.javadsl.model.headers.RawHeader
-import akka.http.scaladsl.model.{StatusCodes, headers}
-import akka.http.scaladsl.model.headers.RawHeader
+import com.knoldus.userservice.model.{JsonSupport, LoginRequest, UserDetails}
+import com.knoldus.userservice.service.{UserService, UserServiceImpl}
 import pdi.jwt.{Jwt, JwtAlgorithm}
 
-import scala.util.Success
+trait UserRoutes extends JsonSupport {
 
-class UserRoutes(masterUserRepo:MasterUserComponent#MasterUserRepository) extends JsonSupport {
+  val userService : UserService
 
   implicit val clock: Clock = Clock.systemUTC
 
   private def login = post {
     entity(as[LoginRequest]) { user =>
-      onComplete(masterUserRepo.authenticateUser(user)) {
-        case util.Success(res) if res.length == 1 => onComplete(masterUserRepo.isEmailVerified(user)) {
+      onComplete(userService.authenticateUser(user)) {
+        case util.Success(res) if res.length == 1 => onComplete(userService.isEmailVerified(user)) {
           case util.Success(res) if res.head => {
             val claims = Jwt.encode(user.uname,"secretKey", JwtAlgorithm.HS256)
             complete("Welcome," + user.uname + "\nToken: " + claims)
@@ -37,9 +34,9 @@ class UserRoutes(masterUserRepo:MasterUserComponent#MasterUserRepository) extend
 
   private def registerUser = post{
     entity(as[UserDetails]) { user =>
-      val result = masterUserRepo.validateEmail(user.email)
+      val result = userService.validateEmail(user.email)
       if (result) {
-        onComplete(masterUserRepo.registerUser(user)){
+        onComplete(userService.registerUser(user)){
           case util.Success(_) => complete("User Registered Successfully")
           case util.Failure(ex) => complete(ex.getMessage)
         }
@@ -52,7 +49,7 @@ class UserRoutes(masterUserRepo:MasterUserComponent#MasterUserRepository) extend
 
   private def verifyEmail = get{
     parameter("email"){ email =>
-      onComplete(masterUserRepo.verifyEmail(email)){
+      onComplete(userService.verifyEmail(email)){
         case util.Success(1) => complete("Email ID verified")
         case util.Success(0) => complete("No user is registered with the given Email ID")
         case util.Failure(ex) => complete(ex.getMessage)
@@ -61,10 +58,10 @@ class UserRoutes(masterUserRepo:MasterUserComponent#MasterUserRepository) extend
   }
 
   private def getAllUsers = get{
-    complete(masterUserRepo.all)
+    complete(userService.all)
   }
 
-  val routes: Route = path("getUsers"){
+  val userRoutes: Route = path("getUsers"){
     getAllUsers
   } ~
   path("registerUser"){
@@ -76,4 +73,8 @@ class UserRoutes(masterUserRepo:MasterUserComponent#MasterUserRepository) extend
   path("verifyEmail"){
     verifyEmail
   }
+}
+
+class UserRoutesImpl extends UserRoutes {
+  val userService = UserServiceImpl
 }

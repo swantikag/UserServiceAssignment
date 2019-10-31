@@ -1,5 +1,5 @@
-package com.knoldus.userservice.data.persistence
-import com.knoldus.userservice.data.model.LoginUser
+package com.knoldus.userservice.model
+
 import slick.jdbc.MySQLProfile.api._
 
 trait LoginUserComponent extends MasterUserComponent {

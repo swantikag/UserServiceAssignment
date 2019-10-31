@@ -3,23 +3,32 @@ package com.knoldus.userservice.server
 import akka.actor.ActorSystem
 import akka.http.scaladsl.server.Route
 import akka.stream.{ActorMaterializer, Materializer}
-import com.knoldus.userservice.config.UserServiceConfig
+import com.knoldus.userservice.config.{DB, UserServiceConfig}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import akka.http.scaladsl.Http
-import com.knoldus.userservice.data.persistence.DB
+import com.knoldus.userservice.routes.UserRoutesImpl
 
 import scala.io.StdIn
 
-trait HttpServer extends UserServiceConfig {
-  implicit def system : ActorSystem
-  implicit def materializer : Materializer
-  implicit def ec : ExecutionContext
-  val routes : Route
-  val bindingFuture = Http().bindAndHandle(routes, httpHost, httpPort)
-  println(s"Server online at http://localhost:8088/\nPress RETURN to stop...")
-  StdIn.readLine() // let it run until user presses return
-  bindingFuture
-    .flatMap(_.unbind()) // trigger unbinding from the port
-    .onComplete(_ => system.terminate()) // and shutdown when done
+class HttpServer(implicit val system : ActorSystem, implicit val materializer : Materializer)
+  extends UserRoutesImpl with UserServiceConfig {
+  def startServer(address: String, port: Int): Unit = {
+    implicit val executor: ExecutionContext = system.dispatcher
+    val bindingFuture = Http().bindAndHandle(userRoutes, httpHost, httpPort)
+    println(s"Server online at http://localhost:8088/\nPress RETURN to stop...")
+    StdIn.readLine()
+    bindingFuture
+      .flatMap(_.unbind())
+      .onComplete(_ => system.terminate())
+  }
+}
+
+object HttpServer {
+  def main(args: Array[String]): Unit = {
+    implicit val system = ActorSystem()
+    implicit val materializer = ActorMaterializer()
+    val server = new HttpServer()
+    server.startServer("localhost", 8088)
+  }
 }

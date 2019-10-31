@@ -1,4 +1,4 @@
-package com.knoldus.userservice.data.model
+package com.knoldus.userservice.model
 
 /**
  * Holds user details during registration
@@ -49,5 +49,4 @@ case class LoginUser(mobNumber:String,
  * @param password is the entered password
  */
 case class LoginRequest(uname:String,
-                            password:String)
-
+                        password:String)

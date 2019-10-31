@@ -1,6 +1,6 @@
 package com.knoldus.userservice.repo
 
-import com.knoldus.userservice.data.persistence.DB
+import com.knoldus.userservice.config.DB
 
 
 trait TestDBImpl extends DB {

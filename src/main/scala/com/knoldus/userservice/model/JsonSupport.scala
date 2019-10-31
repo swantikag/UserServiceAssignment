@@ -1,4 +1,4 @@
-package com.knoldus.userservice.data.model
+package com.knoldus.userservice.model
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import spray.json.DefaultJsonProtocol
