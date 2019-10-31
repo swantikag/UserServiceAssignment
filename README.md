@@ -1,2 +1,2 @@
 # UserServiceAssignment
-Akka-Http $ slick
+Akka-Http + slick
