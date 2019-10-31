@@ -1,2 +1,2 @@
 # UserServiceAssignment
-Akka-Http + slick + mockito
+Akka-Http + slick + testing with mockito
