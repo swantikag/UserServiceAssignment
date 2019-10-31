@@ -1,1 +1,2 @@
 # UserServiceAssignment
+Akka-Http + slick
